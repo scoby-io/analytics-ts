@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Client should fail on non 204 response 1`] = `"failed to log page viewfailed to log page view. Status code: 201"`;
+
+exports[`Client should log page view 1`] = `
+Array [
+  "/count",
+  "/count?vid=2dc4e4a6b96b8349edd6bad627dccee301389f0d92d528ce625f38a5819d7aca&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery",
+]
+`;
+
+exports[`Client should log page view with referrer 1`] = `
+Array [
+  "/count",
+  "/count?vid=2dc4e4a6b96b8349edd6bad627dccee301389f0d92d528ce625f38a5819d7aca&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery&ref=https%3A%2F%2Fwww.referrer.de%2Fi-refer%3Fbar%3Dfoo",
+]
+`;
+
+exports[`Client should log page view with visitorId 1`] = `
+Array [
+  "/count",
+  "/count?vid=cd8c117700c7d79bdd835dd6aa881750551d0c9e5c5bff4ca978b75715832df4&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery",
+]
+`;
+
+exports[`Client should throw on error 1`] = `"failed to log page viewInternal Server Error"`;
