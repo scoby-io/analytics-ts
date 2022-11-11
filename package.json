@@ -1,6 +1,6 @@
 {
   "name": "@scoby/analytics-ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",
@@ -48,7 +48,7 @@
     "lint:fix": "eslint \"*/**/*.{ts,js,json}\" --fix",
     "build": "rollup --config ./rollup.config.js",
     "release": "standard-version",
-    "prepublishOnly": "npm run doc && npm run lint && npm run test && npm run build"
+    "publish": "npm run doc && npm run lint && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
