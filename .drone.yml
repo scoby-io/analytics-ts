@@ -65,26 +65,33 @@ steps:
     image: plugins/npm:1.0.0
     settings:
       username:
-        from_secret: vault_dev_npm_username
+        from_secret: vault_npmjs_username
       password:
-        from_secret: vault_dev_npm_password
+        from_secret: vault_npmjs_password
+      token:
+        from_secret: vault_npmjs_token
       email: drone@s3y.io
-      registry: http://nexus.scoby-net.com:8081/repository/npm-local/
     when:
       branch: main
     depends_on: [push]
 ---
 kind: secret
-name: vault_dev_npm_username
+name: vault_npmjs_username
 get:
-  path: secret/data/dev/npm
+  path: secret/data/dev/npmjs
   name: username
 ---
 kind: secret
-name: vault_dev_npm_password
+name: vault_npmjs_password
 get:
-  path: secret/data/dev/npm
+  path: secret/data/dev/npmjs
   name: password
+---
+kind: secret
+name: vault_npmjs_token
+get:
+  path: secret/data/dev/npmjs
+  name: token
 ---
 kind: secret
 name: vault_dev_netrc_username
