@@ -1,0 +1,105 @@
+---
+kind: pipeline
+type: docker
+name: analytics-ts-npm-pipeline
+
+platform:
+  arch: amd64
+  os: linux
+
+trigger:
+  event:
+    exclude:
+    - tag
+
+steps:
+
+  - name: install
+    image: node:14
+    commands:
+      - node -v
+      - npm -v
+      - npm ci
+
+  - name: test
+    image: node:14
+    commands:
+      - npm run test:coverage
+    depends_on: [ install ]
+
+  - name: release
+    image: node:14
+    group: release
+    commands:
+      - npm run pre-release
+      - npm run release
+      - last_tag=$(git describe --abbrev=0 --tags)
+      - git tag -d $last_tag
+      - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
+      - git tag -a $last_tag -m "$(git show -s --format=%s)"
+    when:
+      branch: master
+    depends_on: [test]
+
+  - name: push
+    image: appleboy/drone-git-push:0.2.1
+    settings:
+      remote_name: origin
+      branch: master
+      force: false
+      author_name: drone
+      author_email: drone@s3y.io
+      followtags: true
+    environment:
+      DRONE_NETRC_USERNAME:
+        from_secret: vault_dev_netrc_username
+      DRONE_NETRC_PASSWORD:
+        from_secret: vault_dev_netrc_password
+      DRONE_NETRC_MACHINE:
+        from_secret: vault_dev_netrc_machine
+    when:
+      branch: master
+    depends_on: [release]
+
+  - name: publish
+    image: plugins/npm:1.0.0
+    settings:
+      username:
+        from_secret: vault_dev_npm_username
+      password:
+        from_secret: vault_dev_npm_password
+      email: drone@s3y.io
+      registry: http://nexus.scoby-net.com:8081/repository/npm-local/
+    when:
+      branch: master
+    depends_on: [push]
+---
+kind: secret
+name: vault_dev_npm_username
+get:
+  path: secret/data/dev/npm
+  name: username
+---
+kind: secret
+name: vault_dev_npm_password
+get:
+  path: secret/data/dev/npm
+  name: password
+---
+kind: secret
+name: vault_dev_netrc_username
+get:
+  path: secret/data/dev/git
+  name: username
+---
+kind: secret
+name: vault_dev_netrc_password
+get:
+  path: secret/data/dev/git
+  name: password
+---
+kind: secret
+name: vault_dev_netrc_machine
+get:
+  path: secret/data/dev/git
+  name: machine

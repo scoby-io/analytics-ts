@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Client should fail on non 204 response 1`] = `"failed to log page viewfailed to log page view. Status code: 201"`;
+exports[`Client should fail on non 204 response 1`] = `"failed to log page view. Status code: 201"`;
 
 exports[`Client should log page view 1`] = `
 Array [

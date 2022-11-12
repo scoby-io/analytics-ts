@@ -30,6 +30,4 @@ pnpmfile.js
 *.log.*
 
 # Generated files.
-coverage/
-dist/
 .idea

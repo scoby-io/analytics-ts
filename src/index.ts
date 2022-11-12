@@ -54,14 +54,12 @@ export class Client {
       },
     };
 
-    try {
-      const { statusCode } = await got(url, options);
-      if (statusCode === 204) {
-        return true;
-      }
-      throw new Error('failed to log page view. Status code: ' + statusCode);
-    } catch (error: any) {
+    const { statusCode } = await got(url, options).catch((error) => {
       throw new Error('failed to log page view' + error.message);
+    });
+    if (statusCode === 204) {
+      return true;
     }
+    throw new Error('failed to log page view. Status code: ' + statusCode);
   }
 }
