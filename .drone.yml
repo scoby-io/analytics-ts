@@ -38,14 +38,14 @@ steps:
       - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
       - git tag -a $last_tag -m "$(git show -s --format=%s)"
     when:
-      branch: master
+      branch: main
     depends_on: [test]
 
   - name: push
     image: appleboy/drone-git-push:0.2.1
     settings:
       remote_name: origin
-      branch: master
+      branch: main
       force: false
       author_name: drone
       author_email: drone@s3y.io
@@ -58,7 +58,7 @@ steps:
       DRONE_NETRC_MACHINE:
         from_secret: vault_dev_netrc_machine
     when:
-      branch: master
+      branch: main
     depends_on: [release]
 
   - name: publish
@@ -71,7 +71,7 @@ steps:
       email: drone@s3y.io
       registry: http://nexus.scoby-net.com:8081/repository/npm-local/
     when:
-      branch: master
+      branch: main
     depends_on: [push]
 ---
 kind: secret
