@@ -32,3 +32,4 @@ pnpmfile.js
 # Generated files.
 coverage/
 dist/
+.idea
