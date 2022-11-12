@@ -70,7 +70,7 @@ steps:
         from_secret: vault_npmjs_password
       token:
         from_secret: vault_npmjs_token
-      registry: https://registry.npmjs.org/
+      registry: https://registry.npmjs.org
     when:
       branch: main
     depends_on: [push]
