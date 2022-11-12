@@ -1,7 +1,7 @@
 {
   "name": "@scoby/analytics-ts",
   "version": "0.1.3",
-  "description": "",
+  "description": "scoby's official Typescript client to measure web traffic",
   "cdn": "dist/index.umd.js",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
