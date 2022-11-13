@@ -71,6 +71,7 @@ steps:
       token:
         from_secret: vault_npmjs_token
       registry: https://registry.npmjs.org
+      access: public
     when:
       branch: main
     depends_on: [push]
