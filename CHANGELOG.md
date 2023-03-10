@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.0.0 (2023-03-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* add api key authentication and salt
+
+### Features
+
+* add api key authentication and salt ([4196cde](https://github.com/scobyio/analytics-ts/commit/4196cde85fc6c49a74d6edbd668fa9da029e9c16))
+* initial commit ([9d31a53](https://github.com/scobyio/analytics-ts/commit/9d31a53232aea2cf22f822cc3d7163eb2508656d))
+
+
+### Bug Fixes
+
+* avoid deprecated method call ([26b40d9](https://github.com/scobyio/analytics-ts/commit/26b40d987d124d145164b7a5f18d87eac24e1f0b))
+
 ## [1.0.0](https://github.com/scobyio/analytics-ts/compare/v0.1.11...v1.0.0) (2023-03-10)
 
 
