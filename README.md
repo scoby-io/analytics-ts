@@ -26,12 +26,27 @@ npm install @scoby/analytics-ts --save
 yarn add @scoby/analytics-ts
 ```
 
-## Usage
-The client supports asynchronous logging of page views via its `logPageView` method
+## Prerequisites
+You need two values to instantiate your scoby analytics client: your API key and a salt.
+The salt is used to anonymize your traffic before it is sent to our servers.
+You can generate a cryptographically secure using the following command:
 
+````shell
+openssl rand -base64 32
+````
+
+Please find your API key in your [workspace's settings](https://app.scoby.io) - don't have a workspace yet? Create one for free [here](https://app.scoby.io)
+
+
+## Usage
+Instantiate your scoby analytics client using your API key and salt.
 ```typescript
 import { Client } from '@scoby/analytics-ts';
-const client = new Client('xyz789');
+const client = new Client('INSERT_YOUR_API_KEY_HERE', 'INSERT_YOUR_SALT_HERE');
+```
+
+The client supports asynchronous logging of page views via its `logPageView` method
+```typescript
 
 await client.logPageView({
   ipAddress: [IP_ADDRESS],

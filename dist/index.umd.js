@@ -1,5 +1,5 @@
 /*!
- * @scoby/analytics-ts v0.1.4
+ * @scoby/analytics-ts v0.1.10
  * (c) Scoby UG
  * Released under the MIT License.
  */
@@ -69,12 +69,15 @@
     }
 
     var Client = /** @class */ (function () {
-        function Client(jarId) {
-            this.jarId = jarId;
+        function Client(apiKey, salt) {
+            this.apiKey = apiKey;
+            this.salt = salt;
+            this.jarId = this.getJarId();
             this.apiHost = "https://".concat(this.jarId, ".s3y.io");
         }
         Client.prototype.hash = function (value) {
-            return crypto.createHash('sha256').update(value).digest('hex');
+            var hmac = crypto.createHmac('sha256', this.salt);
+            return hmac.update(Buffer.from(value, 'utf-8')).digest('hex');
         };
         Client.prototype.getVisitorId = function (pageView) {
             var visitorId = pageView.visitorId, ipAddress = pageView.ipAddress, userAgent = pageView.userAgent;
@@ -82,6 +85,12 @@
                 return this.hash([visitorId, this.jarId].join('|'));
             }
             return this.hash([ipAddress, userAgent, this.jarId].join('|'));
+        };
+        Client.prototype.getJarId = function () {
+            var buffer = new Buffer(this.apiKey, 'base64');
+            var parts = buffer.toString('ascii').split('|');
+            if (parts.length > 0) ;
+            return parts[0];
         };
         Client.prototype.logPageView = function (pageView) {
             return __awaiter(this, void 0, void 0, function () {
@@ -105,6 +114,9 @@
                             options = {
                                 timeout: {
                                     send: 5000,
+                                },
+                                headers: {
+                                    Authorization: "Bearer ".concat(this.apiKey),
                                 },
                             };
                             return [4 /*yield*/, got__default["default"](url, options).catch(function (error) {

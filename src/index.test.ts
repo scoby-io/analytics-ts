@@ -13,12 +13,18 @@ describe('Client', () => {
   });
 
   it('should initialize', () => {
-    const client = new Client('xyz789');
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
     expect(client).toBeInstanceOf(Client);
   });
 
   it('should throw on error', async () => {
-    const client = new Client('xyz789');
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
 
     nock('https://xyz789.s3y.io')
       .intercept(() => true, 'GET')
@@ -34,7 +40,10 @@ describe('Client', () => {
   });
 
   it('should fail on non 204 response', async () => {
-    const client = new Client('xyz789');
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
 
     nock('https://xyz789.s3y.io')
       .intercept(() => true, 'GET')
@@ -50,7 +59,10 @@ describe('Client', () => {
   });
 
   it('should log page view', async () => {
-    const client = new Client('xyz789');
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
 
     const uris: string[] = [];
     nock('https://xyz789.s3y.io')
@@ -72,7 +84,10 @@ describe('Client', () => {
   });
 
   it('should log page view with referrer', async () => {
-    const client = new Client('xyz789');
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
 
     const uris: string[] = [];
     nock('https://xyz789.s3y.io')
@@ -95,7 +110,10 @@ describe('Client', () => {
   });
 
   it('should log page view with visitorId', async () => {
-    const client = new Client('xyz789');
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
 
     const uris: string[] = [];
     nock('https://xyz789.s3y.io')

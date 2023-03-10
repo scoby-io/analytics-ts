@@ -6,11 +6,14 @@ export interface PageView {
     referringUrl?: string;
 }
 export declare class Client {
-    private jarId;
+    private apiKey;
+    private readonly salt;
+    private readonly jarId;
     private readonly apiHost;
-    constructor(jarId: string);
+    constructor(apiKey: string, salt: string);
     private hash;
     private getVisitorId;
+    private getJarId;
     logPageView(pageView: PageView): Promise<boolean>;
 }
 //# sourceMappingURL=index.d.ts.map

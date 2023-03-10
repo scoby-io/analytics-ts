@@ -1,6 +1,6 @@
 import got from 'got';
 import buildUrl, { IQueryParams } from 'build-url-ts';
-import { createHash } from 'crypto';
+import { createHmac } from 'crypto';
 
 export interface PageView {
   ipAddress: string;
@@ -11,14 +11,16 @@ export interface PageView {
 }
 
 export class Client {
+  private readonly jarId: string;
   private readonly apiHost: string;
-
-  constructor(private jarId: string) {
+  constructor(private apiKey: string, private readonly salt: string) {
+    this.jarId = this.getJarId();
     this.apiHost = `https://${this.jarId}.s3y.io`;
   }
 
   private hash(value: string): string {
-    return createHash('sha256').update(value).digest('hex');
+    const hmac = createHmac('sha256', this.salt);
+    return hmac.update(Buffer.from(value, 'utf-8')).digest('hex');
   }
 
   private getVisitorId(pageView: PageView): string {
@@ -28,6 +30,15 @@ export class Client {
     }
 
     return this.hash([ipAddress, userAgent, this.jarId].join('|'));
+  }
+
+  private getJarId(): string {
+    const buffer = new Buffer(this.apiKey, 'base64');
+    const parts = buffer.toString('ascii').split('|');
+    if (parts.length > 0) {
+      new Error('failed to extract jarId from apiKey');
+    }
+    return parts[0] as string;
   }
 
   public async logPageView(pageView: PageView): Promise<boolean> {
@@ -51,6 +62,9 @@ export class Client {
     const options = {
       timeout: {
         send: 5000,
+      },
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
       },
     };
 
