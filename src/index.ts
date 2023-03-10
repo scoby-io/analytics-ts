@@ -33,8 +33,9 @@ export class Client {
   }
 
   private getJarId(): string {
-    const buffer = new Buffer(this.apiKey, 'base64');
-    const parts = buffer.toString('ascii').split('|');
+    const parts = Buffer.from(this.apiKey, 'base64')
+      .toString('ascii')
+      .split('|');
     if (parts.length > 0) {
       new Error('failed to extract jarId from apiKey');
     }
