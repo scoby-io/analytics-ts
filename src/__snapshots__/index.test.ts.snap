@@ -9,6 +9,13 @@ Array [
 ]
 `;
 
+exports[`Client should log page view with non-blocked ip 1`] = `
+Array [
+  "/count",
+  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery",
+]
+`;
+
 exports[`Client should log page view with referrer 1`] = `
 Array [
   "/count",

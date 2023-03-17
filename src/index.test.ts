@@ -134,4 +134,58 @@ describe('Client', () => {
 
     expect(uris).toMatchSnapshot();
   });
+
+  it('should log page view with non-blocked ip', async () => {
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
+
+    const uris: string[] = [];
+    nock('https://xyz789.s3y.io')
+      .intercept((uri) => {
+        uris.push(uri);
+        return true;
+      }, 'GET')
+      .reply(204);
+
+    client.blacklistIpRange('7.8.9.*');
+
+    await expect(
+      client.logPageView({
+        ipAddress: IP_ADDRESS,
+        requestedUrl: REQUESTED_URL,
+        userAgent: USERAGENT,
+      }),
+    ).resolves.toEqual(true);
+
+    expect(uris).toMatchSnapshot();
+  });
+
+  it('should not log page view with blocked ip', async () => {
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
+
+    const uris: string[] = [];
+    nock('https://xyz789.s3y.io')
+      .intercept((uri) => {
+        uris.push(uri);
+        return true;
+      }, 'GET')
+      .reply(204);
+
+    client.blacklistIpRange('2.3.4.*');
+
+    await expect(
+      client.logPageView({
+        ipAddress: IP_ADDRESS,
+        requestedUrl: REQUESTED_URL,
+        userAgent: USERAGENT,
+      }),
+    ).resolves.toEqual(false);
+
+    expect(uris.length).toEqual(0);
+  });
 });

@@ -1,5 +1,5 @@
 /*!
- * @scoby/analytics-ts v0.1.10
+ * @scoby/analytics-ts v2.0.0
  * (c) Scoby UG
  * Released under the MIT License.
  */
@@ -11,6 +11,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var got = require('got');
 var buildUrl = require('build-url-ts');
 var crypto = require('crypto');
+var ipMatching = require('ip-matching');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -74,6 +75,7 @@ var Client = /** @class */ (function () {
     function Client(apiKey, salt) {
         this.apiKey = apiKey;
         this.salt = salt;
+        this.ipBlacklistPatterns = [];
         this.jarId = this.getJarId();
         this.apiHost = "https://".concat(this.jarId, ".s3y.io");
     }
@@ -89,18 +91,22 @@ var Client = /** @class */ (function () {
         return this.hash([ipAddress, userAgent, this.jarId].join('|'));
     };
     Client.prototype.getJarId = function () {
-        var buffer = new Buffer(this.apiKey, 'base64');
-        var parts = buffer.toString('ascii').split('|');
+        var parts = Buffer.from(this.apiKey, 'base64')
+            .toString('ascii')
+            .split('|');
         if (parts.length > 0) ;
         return parts[0];
     };
     Client.prototype.logPageView = function (pageView) {
         return __awaiter(this, void 0, void 0, function () {
-            var userAgent, requestedUrl, referringUrl, queryParams, url, options, statusCode;
+            var userAgent, requestedUrl, referringUrl, ipAddress, queryParams, url, options, statusCode;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        userAgent = pageView.userAgent, requestedUrl = pageView.requestedUrl, referringUrl = pageView.referringUrl;
+                        userAgent = pageView.userAgent, requestedUrl = pageView.requestedUrl, referringUrl = pageView.referringUrl, ipAddress = pageView.ipAddress;
+                        if (this.isBlockedIp(ipAddress)) {
+                            return [2 /*return*/, false];
+                        }
                         queryParams = {
                             vid: this.getVisitorId(pageView),
                             ua: userAgent,
@@ -133,6 +139,17 @@ var Client = /** @class */ (function () {
                 }
             });
         });
+    };
+    Client.prototype.isBlockedIp = function (ipAddress) {
+        for (var _i = 0, _a = this.ipBlacklistPatterns; _i < _a.length; _i++) {
+            var pattern = _a[_i];
+            if (ipMatching.matches(ipAddress, pattern))
+                return true;
+        }
+        return false;
+    };
+    Client.prototype.blacklistIpRange = function (pattern) {
+        this.ipBlacklistPatterns.push(pattern);
     };
     return Client;
 }());

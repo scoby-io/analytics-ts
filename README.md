@@ -61,7 +61,7 @@ To help you count your visitors as accurately as possible, you can provide a cus
 
 ```typescript
 import { Client } from '@scoby/analytics-ts';
-const client = new Client('xyz789');
+const client = new Client('INSERT_YOUR_API_KEY_HERE', 'INSERT_YOUR_SALT_HERE');
 
 await client.logPageView({
   ipAddress: [IP_ADDRESS],
@@ -70,6 +70,36 @@ await client.logPageView({
   referringUrl: [REFERRING_URL],
   visitorId: [YOUR_VISITOR_ID]
 });
+```
+
+
+### IP Blacklisting
+By default, scoby will not exclude any traffic from your measurements, but we understand that sometimes it is necessary
+to filter out traffic originating from a range of IP addresses. To do this, we added the `blacklistIpRange` method,
+which supports wildcard patterns as well as CIDR subnet notation for your convenience.
+You can add as many IPs, patterns and ranges as you like.
+```typescript
+client.blacklistIpRange('12.34.*.*')
+client.blacklistIpRange('87.65.43.21/16')
+client.blacklistIpRange('1.2.3.4')
+client.blacklistIpRange('::1');
+```
+
+Complete example:
+
+```typescript
+import { Client } from '@scoby/analytics-ts';
+const client = new Client('INSERT_YOUR_API_KEY_HERE', 'INSERT_YOUR_SALT_HERE');
+
+client.blacklistIpRange('12.34.*.*');
+
+await client.logPageView({
+  ipAddress: '12.34.56.78', // range '12.34.*.*' includes '12.34.56.78'
+  requestedUrl: [REQUESTED_URL],
+  userAgent: [USER_AGENT],
+  referringUrl: [REFERRING_URL],
+  visitorId: [YOUR_VISITOR_ID]
+}); // returns: false
 ```
 
 ## Testing

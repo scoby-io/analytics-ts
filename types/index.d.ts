@@ -10,10 +10,13 @@ export declare class Client {
     private readonly salt;
     private readonly jarId;
     private readonly apiHost;
+    private ipBlacklistPatterns;
     constructor(apiKey: string, salt: string);
     private hash;
     private getVisitorId;
     private getJarId;
     logPageView(pageView: PageView): Promise<boolean>;
+    private isBlockedIp;
+    blacklistIpRange(pattern: string): void;
 }
 //# sourceMappingURL=index.d.ts.map

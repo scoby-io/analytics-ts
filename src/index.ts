@@ -1,6 +1,7 @@
 import got from 'got';
 import buildUrl, { IQueryParams } from 'build-url-ts';
 import { createHmac } from 'crypto';
+import { matches } from 'ip-matching';
 
 export interface PageView {
   ipAddress: string;
@@ -13,6 +14,7 @@ export interface PageView {
 export class Client {
   private readonly jarId: string;
   private readonly apiHost: string;
+  private ipBlacklistPatterns: string[] = [];
   constructor(private apiKey: string, private readonly salt: string) {
     this.jarId = this.getJarId();
     this.apiHost = `https://${this.jarId}.s3y.io`;
@@ -43,7 +45,11 @@ export class Client {
   }
 
   public async logPageView(pageView: PageView): Promise<boolean> {
-    const { userAgent, requestedUrl, referringUrl } = pageView;
+    const { userAgent, requestedUrl, referringUrl, ipAddress } = pageView;
+
+    if (this.isBlockedIp(ipAddress)) {
+      return false;
+    }
 
     const queryParams: IQueryParams = {
       vid: this.getVisitorId(pageView),
@@ -76,5 +82,16 @@ export class Client {
       return true;
     }
     throw new Error('failed to log page view. Status code: ' + statusCode);
+  }
+
+  private isBlockedIp(ipAddress: string): boolean {
+    for (const pattern of this.ipBlacklistPatterns) {
+      if (matches(ipAddress, pattern)) return true;
+    }
+    return false;
+  }
+
+  public blacklistIpRange(pattern: string) {
+    this.ipBlacklistPatterns.push(pattern);
   }
 }

@@ -1,14 +1,14 @@
 /*!
- * @scoby/analytics-ts v0.1.10
+ * @scoby/analytics-ts v2.0.0
  * (c) Scoby UG
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('got'), require('build-url-ts'), require('crypto')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'got', 'build-url-ts', 'crypto'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Scoby = {}, global.got, global.buildUrl, global.crypto));
-})(this, (function (exports, got, buildUrl, crypto) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('got'), require('build-url-ts'), require('crypto'), require('ip-matching')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'got', 'build-url-ts', 'crypto', 'ip-matching'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Scoby = {}, global.got, global.buildUrl, global.crypto, global.ipMatching));
+})(this, (function (exports, got, buildUrl, crypto, ipMatching) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -72,6 +72,7 @@
         function Client(apiKey, salt) {
             this.apiKey = apiKey;
             this.salt = salt;
+            this.ipBlacklistPatterns = [];
             this.jarId = this.getJarId();
             this.apiHost = "https://".concat(this.jarId, ".s3y.io");
         }
@@ -87,18 +88,22 @@
             return this.hash([ipAddress, userAgent, this.jarId].join('|'));
         };
         Client.prototype.getJarId = function () {
-            var buffer = new Buffer(this.apiKey, 'base64');
-            var parts = buffer.toString('ascii').split('|');
+            var parts = Buffer.from(this.apiKey, 'base64')
+                .toString('ascii')
+                .split('|');
             if (parts.length > 0) ;
             return parts[0];
         };
         Client.prototype.logPageView = function (pageView) {
             return __awaiter(this, void 0, void 0, function () {
-                var userAgent, requestedUrl, referringUrl, queryParams, url, options, statusCode;
+                var userAgent, requestedUrl, referringUrl, ipAddress, queryParams, url, options, statusCode;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            userAgent = pageView.userAgent, requestedUrl = pageView.requestedUrl, referringUrl = pageView.referringUrl;
+                            userAgent = pageView.userAgent, requestedUrl = pageView.requestedUrl, referringUrl = pageView.referringUrl, ipAddress = pageView.ipAddress;
+                            if (this.isBlockedIp(ipAddress)) {
+                                return [2 /*return*/, false];
+                            }
                             queryParams = {
                                 vid: this.getVisitorId(pageView),
                                 ua: userAgent,
@@ -131,6 +136,17 @@
                     }
                 });
             });
+        };
+        Client.prototype.isBlockedIp = function (ipAddress) {
+            for (var _i = 0, _a = this.ipBlacklistPatterns; _i < _a.length; _i++) {
+                var pattern = _a[_i];
+                if (ipMatching.matches(ipAddress, pattern))
+                    return true;
+            }
+            return false;
+        };
+        Client.prototype.blacklistIpRange = function (pattern) {
+            this.ipBlacklistPatterns.push(pattern);
         };
         return Client;
     }());
