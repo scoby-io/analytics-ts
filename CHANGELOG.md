@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/scobyio/analytics-ts/compare/v2.0.0...v2.1.0) (2023-03-17)
+
+
+### Features
+
+* allow ip blacklisting ([2e03281](https://github.com/scobyio/analytics-ts/commit/2e03281c02b38570add88733e4b6a8754ca0ab51))
+
 ## 2.0.0 (2023-03-10)
 
 
