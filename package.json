@@ -49,7 +49,7 @@
     "lint": "eslint \"*/**/*.{ts,js,json}\"",
     "lint:fix": "eslint \"*/**/*.{ts,js,json}\" --fix",
     "build": "rollup --config ./rollup.config.js",
-    "release": "standard-version",
+    "release": "standard-version --tag-prefix \"\"",
     "pre-release": "npm run doc && npm run lint && npm run test:coverage && npm run build"
   },
   "repository": {
