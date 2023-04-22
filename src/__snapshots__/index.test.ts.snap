@@ -5,28 +5,42 @@ exports[`Client should fail on non 204 response 1`] = `"failed to log page view.
 exports[`Client should log page view 1`] = `
 Array [
   "/count",
-  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery",
+  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=https%3A%2F%2Fwww.this-host-was-called.com%2Fand-this-was-the-path%3Futm_source%3Dadprovider",
+]
+`;
+
+exports[`Client should log page view visitor segments 1`] = `
+Array [
+  "/count",
+  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=https%3A%2F%2Fwww.this-host-was-called.com%2Fand-this-was-the-path%3Futm_source%3Dadprovider&ref=https%3A%2F%2Fwww.referrer.de&sg=Subscribers%2CWomen%2CYoung%20Adults",
+]
+`;
+
+exports[`Client should log page view with additional whitelisted params 1`] = `
+Array [
+  "/count",
+  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=https%3A%2F%2Fwww.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery%26utm_source%3Dadprovider&ref=https%3A%2F%2Fwww.referrer.de",
 ]
 `;
 
 exports[`Client should log page view with non-blocked ip 1`] = `
 Array [
   "/count",
-  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery",
+  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=https%3A%2F%2Fwww.this-host-was-called.com%2Fand-this-was-the-path%3Futm_source%3Dadprovider",
 ]
 `;
 
 exports[`Client should log page view with referrer 1`] = `
 Array [
   "/count",
-  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery&ref=https%3A%2F%2Fwww.referrer.de%2Fi-refer%3Fbar%3Dfoo",
+  "/count?vid=7416057d059dbbb11b8d565cea4c4e9cf5dbf8c641e497fbdb2407ac1e503378&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=https%3A%2F%2Fwww.this-host-was-called.com%2Fand-this-was-the-path%3Futm_source%3Dadprovider&ref=https%3A%2F%2Fwww.referrer.de",
 ]
 `;
 
 exports[`Client should log page view with visitorId 1`] = `
 Array [
   "/count",
-  "/count?vid=3b18f43218be411d69299066baab0b48a8aa74a706e98bdf07117e14b2575213&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=www.this-host-was-called.com%2Fand-this-was-the-path%3Fwith%3Dquery",
+  "/count?vid=3b18f43218be411d69299066baab0b48a8aa74a706e98bdf07117e14b2575213&ua=Mozilla%2FSafari%2FChrome%2F1.2&url=https%3A%2F%2Fwww.this-host-was-called.com%2Fand-this-was-the-path%3Futm_source%3Dadprovider",
 ]
 `;
 

@@ -11,6 +11,7 @@
 - [requestedUrl](PageView.md#requestedurl)
 - [userAgent](PageView.md#useragent)
 - [visitorId](PageView.md#visitorid)
+- [visitorSegments](PageView.md#visitorsegments)
 
 ## Properties
 
@@ -20,7 +21,7 @@
 
 #### Defined in
 
-index.ts:6
+index.ts:7
 
 ___
 
@@ -30,7 +31,7 @@ ___
 
 #### Defined in
 
-index.ts:10
+index.ts:11
 
 ___
 
@@ -40,7 +41,7 @@ ___
 
 #### Defined in
 
-index.ts:8
+index.ts:9
 
 ___
 
@@ -50,7 +51,7 @@ ___
 
 #### Defined in
 
-index.ts:7
+index.ts:8
 
 ___
 
@@ -60,4 +61,14 @@ ___
 
 #### Defined in
 
-index.ts:9
+index.ts:10
+
+___
+
+### visitorSegments
+
+• `Optional` **visitorSegments**: `string`[]
+
+#### Defined in
+
+index.ts:12

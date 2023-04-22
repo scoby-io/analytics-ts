@@ -1,5 +1,5 @@
 /*!
- * @scoby/analytics-ts v2.0.0
+ * @scoby/analytics-ts v3.0.0
  * (c) Scoby UG
  * Released under the MIT License.
  */
@@ -73,8 +73,15 @@
             this.apiKey = apiKey;
             this.salt = salt;
             this.ipBlacklistPatterns = [];
-            this.jarId = this.getJarId();
-            this.apiHost = "https://".concat(this.jarId, ".s3y.io");
+            this.whitelistedUrlParameters = [
+                'utm_medium',
+                'utm_source',
+                'utm_campaign',
+                'utm_content',
+                'utm_term',
+            ];
+            this.workspaceId = this.getWorkspaceId();
+            this.apiHost = "https://".concat(this.workspaceId, ".s3y.io");
         }
         Client.prototype.hash = function (value) {
             var hmac = crypto.createHmac('sha256', this.salt);
@@ -83,34 +90,55 @@
         Client.prototype.getVisitorId = function (pageView) {
             var visitorId = pageView.visitorId, ipAddress = pageView.ipAddress, userAgent = pageView.userAgent;
             if (visitorId) {
-                return this.hash([visitorId, this.jarId].join('|'));
+                return this.hash([visitorId, this.workspaceId].join('|'));
             }
-            return this.hash([ipAddress, userAgent, this.jarId].join('|'));
+            return this.hash([ipAddress, userAgent, this.workspaceId].join('|'));
         };
-        Client.prototype.getJarId = function () {
+        Client.prototype.getWorkspaceId = function () {
             var parts = Buffer.from(this.apiKey, 'base64')
                 .toString('ascii')
                 .split('|');
             if (parts.length > 0) ;
             return parts[0];
         };
+        Client.prototype.getRequestedUrl = function (requestedUrl) {
+            var _this = this;
+            var url = new URL(requestedUrl);
+            var searchParams = url.searchParams;
+            searchParams.forEach(function (_value, param) {
+                if (!_this.whitelistedUrlParameters.includes(param)) {
+                    url.searchParams.delete(param);
+                }
+            });
+            return url.toString();
+        };
+        Client.prototype.getReferringUrl = function (referringUrl) {
+            var url = new URL(referringUrl);
+            return "".concat(url.protocol, "//").concat(url.host);
+        };
+        Client.prototype.addWhitelistedUrlParameter = function (param) {
+            this.whitelistedUrlParameters.push(param);
+        };
         Client.prototype.logPageView = function (pageView) {
             return __awaiter(this, void 0, void 0, function () {
-                var userAgent, requestedUrl, referringUrl, ipAddress, queryParams, url, options, statusCode;
+                var userAgent, requestedUrl, referringUrl, ipAddress, visitorSegments, queryParams, url, options, statusCode;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            userAgent = pageView.userAgent, requestedUrl = pageView.requestedUrl, referringUrl = pageView.referringUrl, ipAddress = pageView.ipAddress;
+                            userAgent = pageView.userAgent, requestedUrl = pageView.requestedUrl, referringUrl = pageView.referringUrl, ipAddress = pageView.ipAddress, visitorSegments = pageView.visitorSegments;
                             if (this.isBlockedIp(ipAddress)) {
                                 return [2 /*return*/, false];
                             }
                             queryParams = {
                                 vid: this.getVisitorId(pageView),
                                 ua: userAgent,
-                                url: requestedUrl,
+                                url: this.getRequestedUrl(requestedUrl),
                             };
                             if (referringUrl) {
-                                queryParams['ref'] = referringUrl;
+                                queryParams['ref'] = this.getReferringUrl(referringUrl);
+                            }
+                            if (visitorSegments) {
+                                queryParams['sg'] = visitorSegments.join(',');
                             }
                             url = buildUrl__default["default"](this.apiHost, {
                                 path: '/count',

@@ -5,7 +5,7 @@ const USERAGENT = 'Mozilla/Safari/Chrome/1.2';
 const IP_ADDRESS = '2.3.4.5';
 const REFERRING_URL = 'https://www.referrer.de/i-refer?bar=foo';
 const REQUESTED_URL =
-  'www.this-host-was-called.com/and-this-was-the-path?with=query';
+  'https://www.this-host-was-called.com/and-this-was-the-path?with=query&utm_source=adprovider';
 
 describe('Client', () => {
   beforeEach(() => {
@@ -187,5 +187,60 @@ describe('Client', () => {
     ).resolves.toEqual(false);
 
     expect(uris.length).toEqual(0);
+  });
+
+  it('should log page view visitor segments', async () => {
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
+
+    const uris: string[] = [];
+    nock('https://xyz789.s3y.io')
+      .intercept((uri) => {
+        uris.push(uri);
+        return true;
+      }, 'GET')
+      .reply(204);
+
+    await expect(
+      client.logPageView({
+        ipAddress: IP_ADDRESS,
+        requestedUrl: REQUESTED_URL,
+        userAgent: USERAGENT,
+        referringUrl: REFERRING_URL,
+        visitorSegments: ['Subscribers', 'Women', 'Young Adults'],
+      }),
+    ).resolves.toEqual(true);
+
+    expect(uris).toMatchSnapshot();
+  });
+
+  it('should log page view with additional whitelisted params', async () => {
+    const client = new Client(
+      'eHl6Nzg5fDhRZWJ5emlYc2lxVUdlSHpYU0R6YWpQaFVVS2R5czJl',
+      'udUJiJwY44O6i2lAos8RmA==',
+    );
+
+    client.addWhitelistedUrlParameter('with');
+
+    const uris: string[] = [];
+    nock('https://xyz789.s3y.io')
+      .intercept((uri) => {
+        uris.push(uri);
+        return true;
+      }, 'GET')
+      .reply(204);
+
+    await expect(
+      client.logPageView({
+        ipAddress: IP_ADDRESS,
+        requestedUrl: REQUESTED_URL,
+        userAgent: USERAGENT,
+        referringUrl: REFERRING_URL,
+      }),
+    ).resolves.toEqual(true);
+
+    expect(uris).toMatchSnapshot();
   });
 });
