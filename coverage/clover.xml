@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1682178243873" clover="3.2.0">
-  <project timestamp="1682178243873" name="All files">
+<coverage generated="1682249379011" clover="3.2.0">
+  <project timestamp="1682249379011" name="All files">
     <metrics statements="58" coveredstatements="58" conditionals="8" coveredconditionals="8" methods="13" coveredmethods="13" elements="79" coveredelements="79" complexity="0" loc="58" ncloc="58" packages="1" files="1" classes="1"/>
     <file name="index.ts" path="/Users/peavey/Projects/scoby/analytics-ts/src/index.ts">
       <metrics statements="58" coveredstatements="58" conditionals="8" coveredconditionals="8" methods="13" coveredmethods="13"/>

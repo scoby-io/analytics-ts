@@ -1,7 +1,7 @@
 {
   "out": "./docs",
   "name": "@scoby/analytics-ts",
-  "theme": "markdown",
+  "theme": "default",
   "readme": "none",
   "tsconfig": "./tsconfig.bundle.json"
 }

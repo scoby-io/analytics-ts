@@ -1,5 +1,5 @@
 /*!
- * @scoby/analytics-ts v3.0.0
+ * @scoby/analytics-ts v4.0.0
  * (c) Scoby UG
  * Released under the MIT License.
  */
