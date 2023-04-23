@@ -13,68 +13,67 @@ trigger:
     - tag
 
 steps:
-
   - name: install
-    image: node:14
+    image: node:18
     commands:
-      - node -v
-      - npm -v
-      - npm ci
+      - npm i
+      - git fetch --tags
 
   - name: test
-    image: node:14
+    image: node:18
     commands:
       - npm run test:coverage
     depends_on: [ install ]
 
   - name: release
-    image: node:14
+    image: node:18
     group: release
     commands:
-      - npm run pre-release
       - npm run release
-      - last_tag=$(git describe --abbrev=0 --tags)
-      - git tag -d $last_tag
-      - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
-      - git tag -a $last_tag -m "$(git show -s --format=%s)"
+#      - last_tag=$(git describe --abbrev=0 --tags)
+#      - git tag -d $last_tag
+#      - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
+#      - git tag -a $last_tag -m "$(git show -s --format=%s)"
+#      - last_version=$(echo $last_tag | tr -d 'v')
+#      - echo "stable,$last_version" > .tags
     when:
       branch: main
     depends_on: [test]
 
-  - name: push
-    image: appleboy/drone-git-push:0.2.1
-    settings:
-      remote_name: origin
-      branch: main
-      force: false
-      author_name: drone
-      author_email: drone@s3y.io
-      followtags: true
-    environment:
-      DRONE_NETRC_USERNAME:
-        from_secret: vault_dev_netrc_username
-      DRONE_NETRC_PASSWORD:
-        from_secret: vault_dev_netrc_password
-      DRONE_NETRC_MACHINE:
-        from_secret: vault_dev_netrc_machine
-    when:
-      branch: main
-    depends_on: [release]
+#  - name: push
+#    image: appleboy/drone-git-push:0.2.1
+#    settings:
+#      remote_name: origin
+#      branch: main
+#      force: false
+#      author_name: drone
+#      author_email: drone@s3y.io
+#      followtags: true
+#    environment:
+#      DRONE_NETRC_USERNAME:
+#        from_secret: vault_dev_netrc_username
+#      DRONE_NETRC_PASSWORD:
+#        from_secret: vault_dev_netrc_password
+#      DRONE_NETRC_MACHINE:
+#        from_secret: vault_dev_netrc_machine
+#    when:
+#      branch: main
+#    depends_on: [release]
 
-  - name: publish
-    image: plugins/npm:1.0.0
-    settings:
-      username:
-        from_secret: vault_npmjs_username
-      password:
-        from_secret: vault_npmjs_password
-      token:
-        from_secret: vault_npmjs_token
-      registry: https://registry.npmjs.org
-      access: public
-    when:
-      branch: main
-    depends_on: [push]
+#  - name: publish
+#    image: plugins/npm:1.0.0
+#    settings:
+#      username:
+#        from_secret: vault_npmjs_username
+#      password:
+#        from_secret: vault_npmjs_password
+#      token:
+#        from_secret: vault_npmjs_token
+#      registry: https://registry.npmjs.org
+#      access: public
+#    when:
+#      branch: main
+#    depends_on: [push]
 ---
 kind: secret
 name: vault_npmjs_username
