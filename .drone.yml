@@ -31,7 +31,7 @@ steps:
     commands:
       - npm run pre-release
       - npm run release
-      - git push --follow-tags origin main
+#      - git push --follow-tags origin main
 #      - last_tag=$(git describe --abbrev=0 --tags)
 #      - git tag -d $last_tag
 #      - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
