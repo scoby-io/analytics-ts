@@ -1,5 +1,5 @@
 import got from 'got';
-import buildUrl, { IQueryParams } from 'build-url-ts';
+import { buildUrl, IQueryParams } from 'build-url-ts';
 import { createHmac } from 'crypto';
 import { matches } from 'ip-matching';
 
