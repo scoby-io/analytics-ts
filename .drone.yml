@@ -29,13 +29,12 @@ steps:
     image: node:18
     group: release
     commands:
+      - npm run pre-release
       - npm run release
       - last_tag=$(git describe --abbrev=0 --tags)
       - git tag -d $last_tag
       - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
       - git tag -a $last_tag -m "$(git show -s --format=%s)"
-      - last_version=$(echo $last_tag | tr -d 'v')
-      - echo "stable,$last_version" > .tags
     when:
       branch: main
     depends_on: [test]
