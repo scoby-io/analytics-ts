@@ -17,7 +17,6 @@ steps:
     image: node:18
     commands:
       - npm i
-      - git fetch --tags
 
   - name: test
     image: node:18
@@ -29,13 +28,13 @@ steps:
     image: node:18
     group: release
     commands:
+      - git fetch --tags
       - npm run pre-release
       - npm run release
-#      - git push --follow-tags origin main
-#      - last_tag=$(git describe --abbrev=0 --tags)
-#      - git tag -d $last_tag
-#      - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
-#      - git tag -a $last_tag -m "$(git show -s --format=%s)"
+      - last_tag=$(git describe --abbrev=0 --tags)
+      - git tag -d $last_tag
+      - git commit --amend -m "$(git show -s --format=%s) [skip ci]"
+      - git tag -a $last_tag -m "$(git show -s --format=%s)"
     when:
       branch: main
     depends_on: [test]
